@@ -61,17 +61,26 @@ public class CDVInstagramPlugin extends CordovaPlugin {
     
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        
+        Log.d("com.cs.distribution", "Inside execute");
         this.cbContext = callbackContext;
         
         if (action.equals("share")) {
             String imageString = args.getString(0);
             String captionString = args.getString(1);
-
+            String type = args.getString(3);
+            Log.d("com.cs.distribution",type);
+          
             PluginResult result = new PluginResult(Status.NO_RESULT);
             result.setKeepCallback(true);
-
-            this.share(imageString, captionString);
+            Log.d("com.cs.distribution","outside check:");
+            // if(type.equals("image")){
+                Log.d("com.cs.distribution",type);
+                this.share(imageString, captionString, type);
+            // }
+            // else if(type.equals("video")){
+            //     this.shareVideo(imageString, captionString);
+            // }
+           
             return true;
         } else if (action.equals("isInstalled")) {
             this.isInstalled();
@@ -90,7 +99,16 @@ public class CDVInstagramPlugin extends CordovaPlugin {
         }
     }
 
-    private void share(String imageString, String captionString) {
+    
+
+    private void share(String imageString, String captionString, String type) {
+        Log.d("com.cs.distribution","Image");
+        String fileExtention = ".png";
+        String contentType = "image/*";
+        if(type.equals("video")){
+            fileExtention = ".mp4";
+            contentType = "video/*";
+        }
         if (imageString != null && imageString.length() > 0) { 
             byte[] imageData = Base64.decode(imageString, 0);
             
@@ -104,7 +122,7 @@ public class CDVInstagramPlugin extends CordovaPlugin {
             }
 
             try {
-                file = File.createTempFile("instagram", ".png", parentDir);
+                file = File.createTempFile("instagram", fileExtention, parentDir);
                 os = new FileOutputStream(file, true);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -120,7 +138,7 @@ public class CDVInstagramPlugin extends CordovaPlugin {
             }
 
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            shareIntent.setType("image/*");
+            shareIntent.setType(contentType);
 
             if (Build.VERSION.SDK_INT < 26) {
                 // Handle the file uri with pre Oreo method    

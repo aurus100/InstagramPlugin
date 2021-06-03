@@ -74,11 +74,13 @@ typedef NS_ENUM(NSUInteger, ERROR_CODE) {
     NSString    *objectAtIndex0 = [command argumentAtIndex:0];
     NSString    *caption = [command argumentAtIndex:1];
     NSNumber    *mode = [command argumentAtIndex:2];
-    
+    NSString    *type = [command argumentAtIndex:3];
+    NSLog(@"************************************");
+    NSLog(@"Using type: %@", type);
     __block CDVPluginResult *result;
     
     NSURL *instagramURL = [NSURL URLWithString:@"instagram://app"];
-    if ([[UIApplication sharedApplication] canOpenURL:instagramURL]) {
+    // if ([[UIApplication sharedApplication] canOpenURL:instagramURL]) {
         NSLog(@"open in instagram");
         
         NSData *imageObj = [[NSData alloc] initWithBase64EncodedString:objectAtIndex0 options:0];
@@ -106,7 +108,11 @@ typedef NS_ENUM(NSUInteger, ERROR_CODE) {
         }
         else {
             NSString *fileName;
-            fileName = @"cordova-instagram.jpg"; // todo: perhaps a random hash would be better.
+            fileName = @"cordova-instagram.jpg";
+            if ([type isEqualToString:@"video"]){
+                fileName = @"cordova-instagram.mp4";
+            }
+            // todo: perhaps a random hash would be better.
             path = [tmpDir stringByAppendingPathComponent:fileName];
         }
 
@@ -129,20 +135,37 @@ typedef NS_ENUM(NSUInteger, ERROR_CODE) {
             }
         } else {
             NSLog(@"Attempting to save to library, read as a PHAsset for it's localidentifier, and launch using App Intent.");
-            UIImage *image = [UIImage imageWithContentsOfFile:path];
-            
+            UIImage *image;
+            NSURL *video;
+            image = [NSURL URLWithString:path]; 
+            // image = [UIImage imageWithContentsOfFile:path];
+            if ([type isEqualToString:@"video"]){
+                video = [NSURL URLWithString:path]; 
+            }
+           
+           
+            // NSLog(@"Image: %@", image);
             __block NSString* localId;
 
             // Add it to the photo library
             NSLog(@"Sharing to library now..");
+           
             [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
-                PHAssetChangeRequest *assetChangeRequest = [PHAssetChangeRequest creationRequestForAssetFromImage:image];
+                PHAssetChangeRequest *assetChangeRequest;
+                if ([type isEqualToString:@"video"]){
+                    assetChangeRequest = [PHAssetChangeRequest creationRequestForAssetFromVideoAtFileURL:video];
+                }
+                else{
+                    assetChangeRequest = [PHAssetChangeRequest creationRequestForAssetFromImageAtFileURL:image];
+                }
+               
                 localId = [[assetChangeRequest placeholderForCreatedAsset] localIdentifier];
             } completionHandler:^(BOOL success, NSError *error) {
                 if (!success) {
                     NSLog(@"Error creating asset: %@", error);
                 } else {
                     @try {
+                        NSLog(@"Local asset Id ***********: %@", localId);
                         NSString *localIdentifierEscaped = [localId stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
 		                NSURL *instagramShareURL   = [NSURL URLWithString:[NSString stringWithFormat:@"instagram://library?LocalIdentifier=%@", localIdentifierEscaped]];
                         NSLog(@"Opening %@, using intent: %@", localId, instagramShareURL);
@@ -179,10 +202,10 @@ typedef NS_ENUM(NSUInteger, ERROR_CODE) {
             }];
             
         }
-    } else {
-        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageToErrorObject:EC_INSTAGRAM_INACCESSIBLE];
-        [self.commandDelegate sendPluginResult:result callbackId: self.callbackId];
-    }
+    // } else {
+    //     result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageToErrorObject:EC_INSTAGRAM_INACCESSIBLE];
+    //     [self.commandDelegate sendPluginResult:result callbackId: self.callbackId];
+    // }
 }
 
 - (void)shareAsset:(CDVInvokedUrlCommand*)command {
