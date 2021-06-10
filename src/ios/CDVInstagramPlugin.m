@@ -80,7 +80,7 @@ typedef NS_ENUM(NSUInteger, ERROR_CODE) {
     __block CDVPluginResult *result;
     
     NSURL *instagramURL = [NSURL URLWithString:@"instagram://app"];
-    // if ([[UIApplication sharedApplication] canOpenURL:instagramURL]) {
+    if ([[UIApplication sharedApplication] canOpenURL:instagramURL]) {
         NSLog(@"open in instagram");
         
         NSData *imageObj = [[NSData alloc] initWithBase64EncodedString:objectAtIndex0 options:0];
@@ -109,7 +109,9 @@ typedef NS_ENUM(NSUInteger, ERROR_CODE) {
         else {
             NSString *fileName;
             fileName = @"cordova-instagram.jpg";
-            if ([type isEqualToString:@"video"]){
+            NSLog(@"Using type again: %@", type);
+            if([type isEqualToString:@"video"]){
+                NSLog(@"Inside if for type video: %@", type);
                 fileName = @"cordova-instagram.mp4";
             }
             // todo: perhaps a random hash would be better.
@@ -202,10 +204,76 @@ typedef NS_ENUM(NSUInteger, ERROR_CODE) {
             }];
             
         }
-    // } else {
-    //     result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageToErrorObject:EC_INSTAGRAM_INACCESSIBLE];
-    //     [self.commandDelegate sendPluginResult:result callbackId: self.callbackId];
-    // }
+    } else {
+        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageToErrorObject:EC_INSTAGRAM_INACCESSIBLE];
+        [self.commandDelegate sendPluginResult:result callbackId: self.callbackId];
+    }
+}
+
+
+- (void)downloadToLibrary:(CDVInvokedUrlCommand*)command {
+    self.callbackId = command.callbackId;
+    self.toInstagram = FALSE;
+    NSString    *objectAtIndex0 = [command argumentAtIndex:0];
+    NSString    *type = [command argumentAtIndex:1];
+  
+    NSLog(@"************************************downloadToLib");
+    NSLog(@"Using type: %@", type);
+    __block CDVPluginResult *result;
+        NSData *imageObj = [[NSData alloc] initWithBase64EncodedString:objectAtIndex0 options:0];
+        NSString *tmpDir = NSTemporaryDirectory();
+        NSString *path;
+        NSString *uti;
+        NSString *fileName;
+        fileName = @"download.jpg";
+        NSLog(@"Using type again: %@", type);
+        if([type isEqualToString:@"video"]){
+            NSLog(@"Inside if for type video: %@", type);
+            fileName = @"download.mp4";
+        }
+        // todo: perhaps a random hash would be better.
+        path = [tmpDir stringByAppendingPathComponent:fileName];
+        NSLog(@"Saving temporary file under app specific folder: %@", path);
+        [imageObj writeToFile:path atomically:true];
+
+            NSLog(@"Attempting to save to library, read as a PHAsset for it's localidentifier, and launch using App Intent.");
+            UIImage *image;
+            NSURL *video;
+            image = [NSURL URLWithString:path]; 
+            // image = [UIImage imageWithContentsOfFile:path];
+            if ([type isEqualToString:@"video"]){
+                video = [NSURL URLWithString:path]; 
+            }
+           
+           
+            // NSLog(@"Image: %@", image);
+            __block NSString* localId;
+
+            // Add it to the photo library
+            NSLog(@"Sharing to library now..");
+           
+            [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+                PHAssetChangeRequest *assetChangeRequest;
+                if ([type isEqualToString:@"video"]){
+                    assetChangeRequest = [PHAssetChangeRequest creationRequestForAssetFromVideoAtFileURL:video];
+                }
+                else{
+                    assetChangeRequest = [PHAssetChangeRequest creationRequestForAssetFromImageAtFileURL:image];
+                }
+               
+                localId = [[assetChangeRequest placeholderForCreatedAsset] localIdentifier];
+            } completionHandler:^(BOOL success, NSError *error) {
+                if (!success) {
+                    NSLog(@"Error creating asset: %@", error);
+                } else {
+                     NSLog(@"Successfully downloaded");
+
+                    // dispatch_async(dispatch_get_main_queue(), ^{
+                    result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+                    [self.commandDelegate sendPluginResult:result callbackId: self.callbackId];
+                    // });
+                }
+            }];     
 }
 
 - (void)shareAsset:(CDVInvokedUrlCommand*)command {

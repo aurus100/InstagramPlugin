@@ -133,6 +133,39 @@ var Plugin = {
       console.log("oops, Instagram image data string has to start with 'data:image' or 'data:video/mp4'.")
     }
   },
+  downloadToLibrary: function () { //only ios
+    console.log(arguments[0]);
+    var data,
+        callback,
+        type="image" 
+        
+       
+    data = arguments[0];
+    callback = arguments[1];
+    type = arguments[2];
+
+    console.log("***************");
+    console.log(type, callback);
+
+    var imageData;
+    if(type == "image"){
+      imageData = data.replace(/data:image\/(png|jpeg);base64,/, "");
+    }
+    else if(type == "video"){
+      imageData = data.replace(/data:video\/(mp4);base64,/, "");
+    }
+
+    exec(
+      function () {
+          callback && callback(null, true);
+      },
+      function (err) {
+        console.log(err);
+          callback && callback(err);
+      }, "Instagram", "downloadToLibrary", [imageData, type]
+    );
+    
+  },
   shareAsset: function (successCallback, errorCallback, assetLocalIdentifier) {
       // sanity check
       if (hasCheckedInstall && !isAppInstalled) {
