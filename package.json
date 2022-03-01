@@ -1,33 +1,58 @@
 {
-	"name": "cordova-instagram-plugin",
-	"version": "0.6.2",
-	"description": "Share the content of a canvas element or a dataUrl encoded image using the Instagram application for iOS and Android.",
-	"cordova": {
-		"id": "cordova-instagram-plugin",
-		"platforms": [
-			"android",
-			"ios"
-		]
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/vstirbu/InstagramPlugin.git"
-	},
-	"keywords": [
-		"ecosystem:cordova",
-		"cordova-android",
-		"cordova-ios"
-	],
-	"engines": [
-		{
-			"name": "cordova",
-			"version": ">=3.0.0"
-		}
-	],
-	"author": "Vlad Stirbu",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/vstirbu/InstagramPlugin/issues"
-	},
-	"homepage": "https://github.com/vstirbu/InstagramPlugin#readme"
+  "_from": "git+https://github.com/aurus100/InstagramPlugin.git",
+  "_id": "cordova-instagram-plugin@0.6.2",
+  "_inBundle": false,
+  "_integrity": "",
+  "_location": "/cordova-instagram-plugin",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "https://github.com/aurus100/InstagramPlugin.git",
+    "rawSpec": "https://github.com/aurus100/InstagramPlugin.git",
+    "saveSpec": "git+https://github.com/aurus100/InstagramPlugin.git",
+    "fetchSpec": "https://github.com/aurus100/InstagramPlugin.git",
+    "gitCommittish": null
+  },
+  "_requiredBy": [
+    "#DEV:/",
+    "#USER"
+  ],
+  "_resolved": "git+https://github.com/aurus100/InstagramPlugin.git#ee921b2ae4013545a2d637e46844bd1d92b5c340",
+  "_spec": "https://github.com/aurus100/InstagramPlugin.git",
+  "_where": "c:\\work_space\\content_stadium\\Distribute",
+  "author": {
+    "name": "Vlad Stirbu"
+  },
+  "bugs": {
+    "url": "https://github.com/vstirbu/InstagramPlugin/issues"
+  },
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "cordova-instagram-plugin",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "deprecated": false,
+  "description": "Share the content of a canvas element or a dataUrl encoded image using the Instagram application for iOS and Android.",
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.0.0"
+    }
+  ],
+  "homepage": "https://github.com/vstirbu/InstagramPlugin#readme",
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "license": "MIT",
+  "name": "cordova-instagram-plugin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vstirbu/InstagramPlugin.git"
+  },
+  "version": "0.6.2"
 }

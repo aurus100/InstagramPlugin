@@ -30,6 +30,7 @@ var hasCheckedInstall,
 function shareDataUrl(dataUrl, caption, callback, mode, type) {
 
   var imageData;
+  var extension = '.'+dataUrl.match(/[^:/]\w+(?=;|,)/)[0];
   if(type == "image"){
     imageData = dataUrl.replace(/data:image\/(png|jpeg);base64,/, "");
   }
@@ -43,15 +44,25 @@ function shareDataUrl(dataUrl, caption, callback, mode, type) {
     }
     console.log(type);
     console.log("executing native share");
+    console.log("extensionextension", extension);
     exec(
         function () {
             callback && callback(null, true);
         },
         function (err) {
             callback && callback(err);
-        }, "Instagram", "share", [imageData, caption, mode, type]
+        }, "Instagram", "share", [_asArray(imageData), caption, mode, type, extension]
     );
 }
+
+_asArray = function (param) {
+  if (param == null) {
+    param = [];
+  } else if (typeof param === 'string') {
+    param = new Array(param);
+  }
+  return param;
+};
 
 var Plugin = {
   SHARE_MODES: {
@@ -173,6 +184,14 @@ var Plugin = {
           return errorCallback && errorCallback("oops, Instagram is not installed ... ");
       }
       exec(successCallback, errorCallback, "Instagram", "shareAsset", [assetLocalIdentifier]);
+  },
+  shareMultiple: function (assets, successCallback, errorCallback) {
+    // sanity check
+    if (hasCheckedInstall && !isAppInstalled) {
+        console.log("oops, Instagram is not installed ... ");
+        return errorCallback && errorCallback("oops, Instagram is not installed ... ");
+    }
+    exec(successCallback, errorCallback, "Instagram", "shareMultiple", [assets]);
   }
 };
 
