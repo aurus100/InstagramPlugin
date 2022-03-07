@@ -159,10 +159,10 @@ var Plugin = {
     console.log(type, callback);
 
     var imageData;
-    if(type == "image"){
+    if(type.toLocaleLowerCase() == "image"){
       imageData = data.replace(/data:image\/(png|jpeg);base64,/, "");
     }
-    else if(type == "video"){
+    else if(type.toLocaleLowerCase() == "video"){
       imageData = data.replace(/data:video\/(mp4);base64,/, "");
     }
 
