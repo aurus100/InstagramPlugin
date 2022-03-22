@@ -31,10 +31,10 @@ function shareDataUrl(dataUrl, caption, callback, mode, type) {
 
   var imageData;
   var extension = '.'+dataUrl.match(/[^:/]\w+(?=;|,)/)[0];
-  if(type == "image"){
+  if(type.toLocaleLowerCase() == "image"){
     imageData = dataUrl.replace(/data:image\/(png|jpeg);base64,/, "");
   }
-  else if(type == "video"){
+  else if(type.toLocaleLowerCase() == "video"){
     imageData = dataUrl.replace(/data:video\/(mp4);base64,/, "");
   }
 
@@ -115,7 +115,7 @@ var Plugin = {
       caption = arguments[1];
       callback = arguments[2];
       mode = arguments[3];
-      type = arguments[4];
+      type = arguments[4].toLocaleLowerCase();
       break;
     default:
     }
@@ -133,11 +133,11 @@ var Plugin = {
       shareDataUrl(canvas.toDataURL(), caption, callback, mode);
     }
     else if (data.slice(0, magic.length) == magic) {
-      shareDataUrl(data, caption, callback, mode, type);
+      shareDataUrl(data, caption, callback, mode, type.toLocaleLowerCase());
     }
     else if(data.slice(0, "data:video/mp4".length) ==  "data:video/mp4" )
     {
-      shareDataUrl(data, caption, callback, mode, type);
+      shareDataUrl(data, caption, callback, mode, type.toLocaleLowerCase());
     }
     else
     {
@@ -153,7 +153,7 @@ var Plugin = {
        
     data = arguments[0];
     callback = arguments[1];
-    type = arguments[2];
+    type = arguments[2].toLocaleLowerCase();
 
     console.log("***************");
     console.log(type, callback);
@@ -173,7 +173,7 @@ var Plugin = {
       function (err) {
         console.log(err);
           callback && callback(err);
-      }, "Instagram", "downloadToLibrary", [imageData, type]
+      }, "Instagram", "downloadToLibrary", [imageData, type.toLocaleLowerCase()]
     );
     
   },
