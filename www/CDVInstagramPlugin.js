@@ -31,10 +31,10 @@ function shareDataUrl(dataUrl, caption, callback, mode, type) {
 
   var imageData;
   var extension = '.'+dataUrl.match(/[^:/]\w+(?=;|,)/)[0];
-  if(type.toLocaleLowerCase() == "image"){
+  if(type.toLowerCase() == "image"){
     imageData = dataUrl.replace(/data:image\/(png|jpeg);base64,/, "");
   }
-  else if(type.toLocaleLowerCase() == "video"){
+  else if(type.toLowerCase() == "video"){
     imageData = dataUrl.replace(/data:video\/(mp4);base64,/, "");
   }
 
@@ -115,7 +115,7 @@ var Plugin = {
       caption = arguments[1];
       callback = arguments[2];
       mode = arguments[3];
-      type = arguments[4].toLocaleLowerCase();
+      type = arguments[4].toLowerCase();
       break;
     default:
     }
@@ -133,11 +133,11 @@ var Plugin = {
       shareDataUrl(canvas.toDataURL(), caption, callback, mode);
     }
     else if (data.slice(0, magic.length) == magic) {
-      shareDataUrl(data, caption, callback, mode, type.toLocaleLowerCase());
+      shareDataUrl(data, caption, callback, mode, type.toLowerCase());
     }
     else if(data.slice(0, "data:video/mp4".length) ==  "data:video/mp4" )
     {
-      shareDataUrl(data, caption, callback, mode, type.toLocaleLowerCase());
+      shareDataUrl(data, caption, callback, mode, type.toLowerCase());
     }
     else
     {
@@ -153,16 +153,16 @@ var Plugin = {
        
     data = arguments[0];
     callback = arguments[1];
-    type = arguments[2].toLocaleLowerCase();
+    type = arguments[2].toLowerCase();
 
     console.log("***************");
     console.log(type, callback);
 
     var imageData;
-    if(type.toLocaleLowerCase() == "image"){
+    if(type.toLowerCase() == "image"){
       imageData = data.replace(/data:image\/(png|jpeg);base64,/, "");
     }
-    else if(type.toLocaleLowerCase() == "video"){
+    else if(type.toLowerCase() == "video"){
       imageData = data.replace(/data:video\/(mp4);base64,/, "");
     }
 
@@ -173,7 +173,7 @@ var Plugin = {
       function (err) {
         console.log(err);
           callback && callback(err);
-      }, "Instagram", "downloadToLibrary", [imageData, type.toLocaleLowerCase()]
+      }, "Instagram", "downloadToLibrary", [imageData, type.toLowerCase()]
     );
     
   },
