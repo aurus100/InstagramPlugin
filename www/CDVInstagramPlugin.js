@@ -27,7 +27,7 @@ var exec = require('cordova/exec');
 var hasCheckedInstall,
     isAppInstalled;
 
-function shareDataUrl(dataUrl, caption, callback, mode, type) {
+function shareDataUrl(dataUrl, caption, callback, mode, type, platform) {
 
   var imageData;
   var extension = '.'+dataUrl.match(/[^:/]\w+(?=;|,)/)[0];
@@ -45,6 +45,9 @@ function shareDataUrl(dataUrl, caption, callback, mode, type) {
     console.log(type);
     console.log("executing native share");
     console.log("extensionextension", extension);
+    let data = imageData;
+      if(platform !== "ios")
+        data = _asArray(imageData);
     exec(
         function () {
             callback && callback(null, true);
@@ -91,7 +94,8 @@ var Plugin = {
         caption,
         callback,
         mode = this.SHARE_MODES.DEFAULT,
-        type="image" 
+        type="image",
+        platform="ios"
 
     switch(arguments.length) {
     case 2:
@@ -117,6 +121,14 @@ var Plugin = {
       mode = arguments[3];
       type = arguments[4].toLowerCase();
       break;
+      case 6:
+        data = arguments[0];
+        caption = arguments[1];
+        callback = arguments[2];
+        mode = arguments[3];
+        type = arguments[4].toLowerCase();
+        platform = arguments[5].toLowerCase();
+        break;
     default:
     }
 
@@ -130,14 +142,14 @@ var Plugin = {
         magic = "data:image";
 
     if (canvas) {
-      shareDataUrl(canvas.toDataURL(), caption, callback, mode);
+      shareDataUrl(canvas.toDataURL(), caption, callback, mode, type, platform);
     }
     else if (data.slice(0, magic.length) == magic) {
-      shareDataUrl(data, caption, callback, mode, type.toLowerCase());
+      shareDataUrl(data, caption, callback, mode, type.toLowerCase(), platform);
     }
     else if(data.slice(0, "data:video/mp4".length) ==  "data:video/mp4" )
     {
-      shareDataUrl(data, caption, callback, mode, type.toLowerCase());
+      shareDataUrl(data, caption, callback, mode, type.toLowerCase(), platform);
     }
     else
     {
