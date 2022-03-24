@@ -54,7 +54,7 @@ function shareDataUrl(dataUrl, caption, callback, mode, type, platform) {
         },
         function (err) {
             callback && callback(err);
-        }, "Instagram", "share", [_asArray(imageData), caption, mode, type, extension]
+        }, "Instagram", "share", [data, caption, mode, type, extension]
     );
 }
 
