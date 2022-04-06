@@ -42,7 +42,8 @@ typedef NS_ENUM(NSUInteger, ERROR_CODE) {
     EC_INSTAGRAM_INACCESSIBLE = 1,
     EC_OTHER_APP_LAUNCHED,
     EC_APP_INTENT_LAUNCH_FAILURE,
-    EC_APP_INTENT_GENERAL_FAILURE
+    EC_APP_INTENT_GENERAL_FAILURE,
+    EC_PHOTO_PERMISSION_FAILURE
 };
 
 @implementation CDVInstagramPlugin
@@ -265,7 +266,7 @@ typedef NS_ENUM(NSUInteger, ERROR_CODE) {
             } completionHandler:^(BOOL success, NSError *error) {
                 if (!success) {
                     NSLog(@"Error creating asset: %@", error);
-                    result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageToErrorObject:EC_APP_INTENT_GENERAL_FAILURE];
+                    result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageToErrorObject:EC_PHOTO_PERMISSION_FAILURE];
                     [self.commandDelegate sendPluginResult:result callbackId: self.callbackId];
                 } else {
                      NSLog(@"Successfully downloaded");
