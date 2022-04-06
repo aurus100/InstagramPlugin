@@ -265,6 +265,8 @@ typedef NS_ENUM(NSUInteger, ERROR_CODE) {
             } completionHandler:^(BOOL success, NSError *error) {
                 if (!success) {
                     NSLog(@"Error creating asset: %@", error);
+                    result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageToErrorObject:EC_APP_INTENT_GENERAL_FAILURE];
+                    [self.commandDelegate sendPluginResult:result callbackId: self.callbackId];
                 } else {
                      NSLog(@"Successfully downloaded");
 

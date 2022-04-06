@@ -89,7 +89,7 @@ var Plugin = {
     }, "Instagram", "isInstalled", []);
   },
   share: function () {
-    console.log(arguments[0]);
+    console.log(arguments);
     var data,
         caption,
         callback,
