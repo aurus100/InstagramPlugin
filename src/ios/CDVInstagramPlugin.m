@@ -166,6 +166,8 @@ typedef NS_ENUM(NSUInteger, ERROR_CODE) {
             } completionHandler:^(BOOL success, NSError *error) {
                 if (!success) {
                     NSLog(@"Error creating asset: %@", error);
+                    result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageToErrorObject:EC_PHOTO_PERMISSION_FAILURE];
+                    [self.commandDelegate sendPluginResult:result callbackId: self.callbackId];
                 } else {
                     @try {
                         NSLog(@"Local asset Id ***********: %@", localId);
